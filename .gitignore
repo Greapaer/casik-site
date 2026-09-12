@@ -1,0 +1,29 @@
+# dependencies
+/node_modules
+/.pnpm-store
+
+# testing
+/coverage
+
+# production
+/dist
+/build
+
+# logs
+*.log
+logs
+.run/
+server.out.log
+server.err.log
+
+# misc
+.DS_Store
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
