@@ -47,12 +47,14 @@ export function ChipToken({
 /** A stack of chips used to indicate a bet */
 export function ChipStack({ amount, size = 24, max = 6 }: { amount: number; size?: number; max?: number }) {
   if (amount <= 0) return null;
+  const isMobile = typeof window !== 'undefined' && window.matchMedia('(max-width: 560px)').matches;
+  const mobileSize = isMobile ? Math.max(16, size * 0.7) : size;
   const stackSize = Math.min(max, Math.max(1, Math.ceil(amount / 400)));
   const items = Array.from({ length: stackSize }, (_, i) => chipDefFor(amount + i * 7));
   return (
     <div className="chip-stack">
       {items.map((d, i) => (
-        <ChipToken key={i} size={size} def={d} />
+        <ChipToken key={i} size={mobileSize} def={d} />
       ))}
     </div>
   );
