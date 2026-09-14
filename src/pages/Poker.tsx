@@ -21,37 +21,66 @@ type SeatKind = 'fold' | 'check' | 'call' | 'raise' | 'allin';
 /** Screen position (% of poker stage) for each seat index. Hero always sits bottom-center. */
 function seatPose(i: number, count: number): { x: number; y: number } {
   const narrow = typeof window !== 'undefined' && window.matchMedia('(max-width: 560px)').matches;
-  const fit = (p: { x: number; y: number }): { x: number; y: number } =>
-    narrow ? { x: Math.min(88, Math.max(12, p.x)), y: p.y } : p;
+  const medium = typeof window !== 'undefined' && window.matchMedia('(max-width: 860px) and (min-width: 561px)').matches;
+  
+  // Более разреженные координаты для предотвращения наложения на мобильных
   if (count <= 2) {
     const HU = [
       { x: 50, y: 88 },
-      { x: 50, y: 10 },
+      { x: 50, y: 12 },
     ];
-    return fit(HU[i] ?? { x: 50, y: 50 });
+    return narrow ? { x: 50, y: 86 } : HU[i] ?? { x: 50, y: 50 };
   }
   if (count <= 5) {
     const FIVE = [
-      { x: 50, y: 90 },
-      { x: 14, y: 62 },
-      { x: 32, y: 12 },
-      { x: 68, y: 12 },
-      { x: 86, y: 62 },
+      { x: 50, y: 88 },
+      { x: 10, y: 58 },
+      { x: 30, y: 10 },
+      { x: 70, y: 10 },
+      { x: 90, y: 58 },
     ];
-    return fit(FIVE[i] ?? { x: 50, y: 50 });
+    if (narrow) {
+      const FIVE_MOBILE = [
+        { x: 50, y: 86 },
+        { x: 8, y: 52 },
+        { x: 28, y: 8 },
+        { x: 72, y: 8 },
+        { x: 92, y: 52 },
+      ];
+      return FIVE_MOBILE[i] ?? { x: 50, y: 50 };
+    }
+    return FIVE[i] ?? { x: 50, y: 50 };
   }
+  // 9-max стол с увеличенными расстояниями между местами
   const NINE = [
-    { x: 50, y: 88 },
-    { x: 8, y: 42 },
-    { x: 20, y: 52 },
-    { x: 14, y: 82 },
-    { x: 30, y: 10 },
-    { x: 50, y: 4 },
-    { x: 70, y: 10 },
-    { x: 86, y: 82 },
-    { x: 92, y: 42 },
+    { x: 50, y: 88 },  // Игрок (низ)
+    { x: 4, y: 42 },   // Лево-низ
+    { x: 12, y: 62 },  // Лево-центр
+    { x: 8, y: 82 },   // Лево-верх (ближе к игроку)
+    { x: 26, y: 6 },   // Верх-лево
+    { x: 50, y: 2 },   // Верх-центр
+    { x: 74, y: 6 },   // Верх-право
+    { x: 92, y: 82 },  // Право-верх
+    { x: 96, y: 42 },  // Право-низ
   ];
-  return fit(NINE[i] ?? { x: 50, y: 50 });
+  
+  if (narrow) {
+    // На мобильных (<560px) еще больше раздвигаем места по краям
+    const NINE_MOBILE = [
+      { x: 50, y: 86 },  // Игрок
+      { x: 3, y: 40 },   // Лево-низ
+      { x: 6, y: 58 },   // Лево-центр
+      { x: 4, y: 78 },   // Лево-верх
+      { x: 24, y: 4 },   // Верх-лево
+      { x: 50, y: 2 },   // Верх-центр
+      { x: 76, y: 4 },   // Верх-право
+      { x: 96, y: 78 },  // Право-верх
+      { x: 97, y: 40 },  // Право-низ
+    ];
+    return NINE_MOBILE[i] ?? { x: 50, y: 50 };
+  }
+  
+  return NINE[i] ?? { x: 50, y: 50 };
 }
 
 const SEAT_SIZES = [
@@ -61,9 +90,9 @@ const SEAT_SIZES = [
 ];
 
 const SPEED_MS: Record<Speed, { deal: number; bot: number; showdown: number; next: number }> = {
-  fast: { deal: 700, bot: 420, showdown: 900, next: 1600 },
-  normal: { deal: 1250, bot: 800, showdown: 1600, next: 2400 },
-  slow: { deal: 1900, bot: 1250, showdown: 2600, next: 3800 },
+  fast: { deal: 250, bot: 80, showdown: 400, next: 600 },
+  normal: { deal: 400, bot: 150, showdown: 700, next: 1000 },
+  slow: { deal: 700, bot: 300, showdown: 1200, next: 1800 },
 };
 
 const MODE_LABEL: Record<Mode, string> = { cash: 'Cash game', sitngo: 'Sit & Go', tournament: 'Tournament' };
