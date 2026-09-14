@@ -127,6 +127,8 @@ body {
 html {
   color-scheme: dark;
   -webkit-text-size-adjust: 100%;
+  /* Prevent iOS zoom on orientation change */
+  touch-action: manipulation;
 }
 
 body {
@@ -135,13 +137,17 @@ body {
   color: var(--text-1);
   line-height: 1.55;
   min-height: 100vh;
+  min-height: 100dvh;
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  /* Prevent zoom on double-tap */
+  touch-action: manipulation;
 }
 
 #root {
   min-height: 100vh;
+  min-height: 100dvh;
   display: flex;
   flex-direction: column;
 }

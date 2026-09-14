@@ -888,6 +888,12 @@ html[data-theme='light'] .icon-btn:hover { background: rgba(0, 0, 0, 0.05); }
   background: rgba(10, 12, 16, 0.98);
   border-top: 1px solid var(--rail);
   transition: transform 0.25s var(--ease-out);
+  /* Prevent content from showing underneath on iOS */
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  /* Ensure it doesn't overflow on small screens */
+  max-width: 100vw;
+  box-sizing: border-box;
 }
 .bottom-nav.keyboard-open { transform: translateY(105%); }
 @media (max-width: 860px) {
@@ -897,6 +903,9 @@ html[data-theme='light'] .icon-btn:hover { background: rgba(0, 0, 0, 0.05); }
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   height: 100%;
+  width: 100%;
+  max-width: 100%;
+  gap: 0;
 }
 .bottom-item {
   display: flex;
@@ -909,6 +918,11 @@ html[data-theme='light'] .icon-btn:hover { background: rgba(0, 0, 0, 0.05); }
   letter-spacing: 0.02em;
   color: var(--text-3);
   transition: color 0.2s;
+  /* Prevent text overflow and ensure proper sizing */
+  min-width: 0;
+  padding: 4px 2px;
+  box-sizing: border-box;
+  text-align: center;
 }
 .bottom-item.active { color: var(--gold-3); }
 .bottom-item .ind {
@@ -953,6 +967,8 @@ html[data-theme='light'] .icon-btn:hover { background: rgba(0, 0, 0, 0.05); }
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  /* Respect iOS safe area */
+  padding-top: env(safe-area-inset-top, 0);
 }
 .header-inner {
   display: flex;
@@ -1675,6 +1691,9 @@ code {
   .mode-title { font-size: 1.3rem; }
   .hero-section { padding-block: 28px; }
   .hero-stats { gap: 12px; }
+  /* Ensure buttons are tap-friendly on mobile */
+  .btn { min-height: 44px; }
+  .nav-link, .bottom-item { min-height: 44px; }
 }
 /* ambient music toggle */
 .music-toggle {
